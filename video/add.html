@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CultureMedia - Añadir Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1557b0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1a73e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .back-link:hover {
+            background-color: #1557b0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Añadir Nuevo Video</h1>
+    <form id="addVideoForm">
+        <div class="form-group">
+            <label for="title">Título:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" required>
+        </div>
+        <div class="form-group">
+            <label for="duration">Duración (minutos):</label>
+            <input type="number" id="duration" name="duration" required min="1">
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="../index.html" class="back-link">Volver al inicio</a>
+</div>
+
+<script>
+    document.getElementById('addVideoForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const videoData = {
+            title: document.getElementById('title').value,
+            url: document.getElementById('url').value,
+            duration: parseInt(document.getElementById('duration').value)
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/videos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(videoData)
+            });
+
+            if (response.ok) {
+                alert('Video añadido exitosamente');
+                window.location.href = 'list.html';
+            } else {
+                const error = await response.json();
+                alert('Error al añadir el video: ' + error.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al añadir el video. Por favor, verifica que el backend esté funcionando.');
+        }
+    });
+</script>
+</body>
+</html>
